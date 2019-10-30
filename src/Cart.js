@@ -2,23 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getProducts } from '../store';
-import { setCartThunks } from '../reducer/cart';
+import { setCartThunks, updateThunks } from '../reducer/cart';
 
 class _Cart extends React.Component {
-  constructor() {
+  constructor({ cart }) {
     super();
     this.state = {
-      
+      quantity: cart.quantity
     }
     this.destroy = this.destroy.bind(this);
-    // this.update = this.update.bind(this);
+    this.update = this.update.bind(this);
   }
   async destroy(id) {
     await this.props.destroy(id);
   }
-  // async update() {
-
-  // }
   async componentDidMount() {
     await this.props.getProducts();
     await this.props.setCart();
@@ -39,6 +36,8 @@ class _Cart extends React.Component {
                 <Link to={`/products/${product.id}`} activeclassname="active"><h1 key='name'>{product.name}</h1></Link>
                 <li key='genre'>{product.genre}</li>
                 <li key='price'>{product.price}</li>
+                <button onClick = { updateThunks({...cart, quantity: this.state.quantity + 1 }) } >+</button> {/* increase quantity of item in cart */}
+                <button onClick = { updateThunks({...cart, quantity: this.state.quantity - 1 }) } >-</button> {/* decrease quantity of item in cart */}
                 <button onClick = { destroy }>Delete</button>
            </div> )
             // : 'Nothing in cart'))
@@ -58,7 +57,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   getProducts: getProducts,
-  setCart: setCartThunks
+  setCart: setCartThunks,
+  updateCart: updateThunks
 }
 
 const Cart = connect(mapStateToProps, mapDispatchToProps)(_Cart);

@@ -29,7 +29,7 @@ export const destroyThunks = (id) => async dispatch => {
   dispatch(destroy(id));
 };
 
-// export const updateThunks = (id, userId) => async dispatch => {
+// export const updateThunks = (id, cartId) => async dispatch => {
 //   const cart = await axios.put(`/api/cart/${id}`, {cartId});
 //   dispatch(update(cart));
 // };
@@ -40,8 +40,8 @@ const cart = (state = [], action) => {
           return action.cart;
       case DESTROY:
           return state.filter(cart => cart.id !== action.cart);
-      // case UPDATE_CART:
-      //     return state.map(cart => cart.id === action.cart.id ? action.cart : cart)
+      case UPDATE_CART:
+          return state.map(cart => cart.id === action.cart.id ? action.cart : cart)
       default:
           return state
     }
