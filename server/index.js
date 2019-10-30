@@ -61,6 +61,16 @@ app.delete('/api/cart/:id', async ( req, res, next ) => {
   }
 });
 
+app.post('/api/cart/', async (req, res, next) => {
+  try {
+    const item = await Cart.create(req.body)
+    res.status(201).send(item)
+  }
+  catch(ex) {
+    next(ex)
+  }
+})
+
 db.sync()
   .then(() => {
 app.listen(port, ()=> console.log(`listening on port ${port}`));
