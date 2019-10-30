@@ -14,10 +14,10 @@ const destroy = cart => ({
   cart
 });
 
-// const update = cart => ({
-//   type: UPDATE_CART,
-//   cart 
-// });
+const update = cart => ({
+  type: UPDATE_CART,
+  cart 
+});
 
 export const setCartThunks = () => async dispatch => {
   const cart = (await axios.get('/api/cart')).data;
@@ -29,10 +29,10 @@ export const destroyThunks = (id) => async dispatch => {
   dispatch(destroy(id));
 };
 
-// export const updateThunks = (id, cartId) => async dispatch => {
-//   const cart = await axios.put(`/api/cart/${id}`, {cartId});
-//   dispatch(update(cart));
-// };
+export const updateThunks = (id, cartId) => async dispatch => {
+  const cart = await axios.put(`/api/cart/${id}`, {cartId});
+  dispatch(update(cart));
+};
 
 const cart = (state = [], action) => {
     switch (action.type) {
