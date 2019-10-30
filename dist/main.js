@@ -33984,7 +33984,7 @@ function warning(message) {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, __RouterContext, generatePath, matchPath, useHistory, useLocation, useParams, useRouteMatch, withRouter, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40477,69 +40477,6 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
-/***/ "./reducer/index.js":
-/*!**************************!*\
-  !*** ./reducer/index.js ***!
-  \**************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var _user__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./user */ "./reducer/user.js");
-/* harmony import */ var _login__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./login */ "./reducer/login.js");
-
-
-
-const reducer = Object(redux__WEBPACK_IMPORTED_MODULE_0__["combineReducers"])({
-  user: _user__WEBPACK_IMPORTED_MODULE_1__["default"],
-  onLogin: _login__WEBPACK_IMPORTED_MODULE_2__["default"]
-});
-/* harmony default export */ __webpack_exports__["default"] = (reducer);
-
-/***/ }),
-
-/***/ "./reducer/login.js":
-/*!**************************!*\
-  !*** ./reducer/login.js ***!
-  \**************************/
-/*! exports provided: onLogin */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLogin", function() { return onLogin; });
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
-
-const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
-const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS";
-
-const setLoginError = err => ({
-  type: SET_LOGIN_ERROR,
-  err
-});
-
-const setLoginSuccess = user => ({
-  type: SET_LOGIN_SUCCESS,
-  user
-});
-
-const onLogin = user => {
-  return async dispatch => {
-    await axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/users', user).then(response => {
-      return dispatch(setLoginSuccess(response.data));
-    }).catch(e => {
-      return dispatch(setLoginError(e.message));
-    });
-  };
-};
-
-
-
-/***/ }),
-
 /***/ "./reducer/user.js":
 /*!*************************!*\
   !*** ./reducer/user.js ***!
@@ -40680,6 +40617,88 @@ const mapState = state => {
 
 /***/ }),
 
+/***/ "./src/Products.js":
+/*!*************************!*\
+  !*** ./src/Products.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store */ "./store.js");
+
+
+
+
+const {
+  Component
+} = react__WEBPACK_IMPORTED_MODULE_0___default.a;
+
+class _Products extends Component {
+  constructor() {
+    super();
+  }
+
+  async componentDidMount() {
+    console.log('hey');
+    await this.props.getProducts();
+  }
+
+  render() {
+    const {
+      products
+    } = this.props;
+    console.log(products);
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, products.map(product => {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        key: "allProducts",
+        id: "flex"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: `/products/${product.id}`,
+        activeclassname: "active"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        key: "img"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: product.imageURL
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: `/products/${product.id}`,
+        activeclassname: "active"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", {
+        key: "name"
+      }, product.name)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        key: "genre"
+      }, product.genre), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        key: "price"
+      }, product.price));
+    })));
+  }
+
+}
+
+;
+
+const mapStateToProps = ({
+  products
+}) => ({
+  products
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getProducts: () => dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_3__["getProducts"])())
+  };
+};
+
+const Products = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(mapStateToProps, mapDispatchToProps)(_Products);
+/* harmony default export */ __webpack_exports__["default"] = (Products);
+
+/***/ }),
+
 /***/ "./src/Routes.js":
 /*!***********************!*\
   !*** ./src/Routes.js ***!
@@ -40693,6 +40712,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Home */ "./src/Home.js");
+/* harmony import */ var _Products__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Products */ "./src/Products.js");
+/* harmony import */ var _SingleProduct__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SingleProduct */ "./src/SingleProduct.js");
+
+
 
 
 
@@ -40703,12 +40726,101 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
       exact: true,
       path: "/",
       component: _Home__WEBPACK_IMPORTED_MODULE_2__["default"]
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+      path: "/products",
+      component: _Products__WEBPACK_IMPORTED_MODULE_3__["default"]
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], {
+      path: "/products/:id",
+      component: _SingleProduct__WEBPACK_IMPORTED_MODULE_4__["default"]
     }));
   }
 
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Routes);
+
+/***/ }),
+
+/***/ "./src/SingleProduct.js":
+/*!******************************!*\
+  !*** ./src/SingleProduct.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store */ "./store.js");
+
+
+
+
+const {
+  Component
+} = react__WEBPACK_IMPORTED_MODULE_0___default.a;
+
+class _SingleProduct extends Component {
+  constructor() {
+    super();
+    this.state = {
+      product: {}
+    };
+  }
+
+  componentDidMount() {
+    const {
+      match: {
+        params
+      }
+    } = this.props;
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(`/api/products/${params.id}`).then(({
+      data
+    }) => {
+      this.setState({
+        product: data
+      });
+    });
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      id: "flex"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      key: "img"
+    }, this.state.product.imageURL), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      key: "name"
+    }, this.state.product.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      key: "genre"
+    }, this.state.product.genre), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      key: "price"
+    }, this.state.product.price), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+      key: "description"
+    }, this.state.product.description)));
+  }
+
+}
+
+;
+
+const mapStateToProps = ({
+  products
+}) => ({
+  products
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getProducts: () => dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_3__["getProducts"])())
+  };
+};
+
+const SingleProduct = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["connect"])(mapStateToProps, mapDispatchToProps)(_SingleProduct);
+/* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
 
 /***/ }),
 
@@ -40745,18 +40857,104 @@ Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED
 /*!******************!*\
   !*** ./store.js ***!
   \******************/
-/*! exports provided: default */
+/*! exports provided: getProducts, getUsers, createUser, destroyProduct, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
-/* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
-/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./reducer */ "./reducer/index.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getProducts", function() { return getProducts; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUsers", function() { return getUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroyProduct", function() { return destroyProduct; });
+/* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
+/* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+const API = '/api';
 
 
+ //Action Types
 
-const store = Object(redux__WEBPACK_IMPORTED_MODULE_0__["createStore"])(_reducer__WEBPACK_IMPORTED_MODULE_2__["default"], Object(redux__WEBPACK_IMPORTED_MODULE_0__["applyMiddleware"])(redux_thunk__WEBPACK_IMPORTED_MODULE_1__["default"]));
+const SET_PRODUCTS = 'SET_PRODUCTS';
+const SET_USERS = 'SET_USERS';
+const CREATE_USER = 'CREATE_USER';
+const DESTROY_PRODUCT = 'DESTROY_PRODUCT'; //Action Creators
+
+const setProducts = products => ({
+  type: SET_PRODUCTS,
+  products
+});
+
+const setUsers = users => ({
+  type: SET_USERS,
+  users
+});
+
+const _createUser = user => ({
+  type: CREATE_USER,
+  user
+});
+
+const _destroyProduct = product => ({
+  type: DESTROY_PRODUCT,
+  product
+}); //Thunks
+
+
+const getProducts = () => {
+  return async dispatch => {
+    const products = (await axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`${API}/products`)).data;
+    dispatch(setProducts(products));
+  };
+};
+
+const getUsers = () => {
+  return async dispatch => {
+    const users = (await axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(`${API}/users`)).data;
+    dispatch(setUsers(users));
+  };
+};
+
+const createUser = () => {
+  return async dispatch => {
+    const created = (await axios__WEBPACK_IMPORTED_MODULE_2___default.a.post(`${API}/users`, user)).data;
+    dispatch(_createUser(created));
+  };
+};
+
+const destroyProduct = product => {
+  return async dispatch => {
+    const destroyed = (await axios__WEBPACK_IMPORTED_MODULE_2___default.a.delete(`${API}/products/${product.id}`, product)).data;
+    dispatch(_destroyProduct(product));
+  };
+};
+
+ //Reducers
+
+const store = Object(redux__WEBPACK_IMPORTED_MODULE_1__["createStore"])(Object(redux__WEBPACK_IMPORTED_MODULE_1__["combineReducers"])({
+  products: (state = [], action) => {
+    if (action.type === SET_PRODUCTS) {
+      return action.products;
+    }
+
+    if (action.type === DESTROY_PRODUCT) {
+      return [...state].filter(product => product.id !== action.product.id);
+    }
+
+    return state;
+  },
+  users: (state = [], action) => {
+    if (action.type === SET_USERS) {
+      return action.users;
+    }
+
+    if (action.type === CREATE_USER) {
+      return [...state, action.user];
+    }
+
+    return state;
+  }
+}), Object(redux__WEBPACK_IMPORTED_MODULE_1__["applyMiddleware"])(redux_thunk__WEBPACK_IMPORTED_MODULE_0__["default"]));
 /* harmony default export */ __webpack_exports__["default"] = (store);
 
 /***/ })

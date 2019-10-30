@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { STRING, UUID, UUIDV4, INTEGER, ENUM } = Sequelize;
-const conn = new Sequelize(process.env.PORT || 'postgres://localhost/playback');
+const conn = new Sequelize(process.env.DATABASE_URL);
 
 const User = conn.define('user', {
   id: {
@@ -157,10 +157,10 @@ const sync = async () => {
   ]
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
-  // let products = [
-  //   {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'}
-  // ]
-  // const [ Scorpion ] = await Promise.all(products.map( product => Product.create(product)));
+  let products = [
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'}
+  ]
+  const [ Scorpion ] = await Promise.all(products.map( product => Product.create(product)));
 
   // let payments = [
   //   {name: 'Visa'},
