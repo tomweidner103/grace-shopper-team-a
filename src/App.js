@@ -3,6 +3,7 @@ import Nav from './Nav';
 import Routes from './Routes';
 import { connect } from 'react-redux';
 import { setUsersThunks } from '../reducer/user';
+import { SignIn } from './SignIn';
 
 class App extends React.Component {
   componentDidMount() {
@@ -13,6 +14,7 @@ class App extends React.Component {
       <div>
         < Nav />
         < Routes />
+        < SignIn />
       </div>
     );
   }
