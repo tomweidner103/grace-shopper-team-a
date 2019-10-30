@@ -19,7 +19,8 @@ const User = conn.define('user', {
     type: STRING
   },
   password: {
-    type: STRING
+    type: STRING,
+    allowNull: false
   }
 });
 
