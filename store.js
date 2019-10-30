@@ -10,6 +10,8 @@ const SET_PRODUCTS = 'SET_PRODUCTS';
 const SET_USERS = 'SET_USERS';
 const CREATE_USER = 'CREATE_USER';
 const DESTROY_PRODUCT = 'DESTROY_PRODUCT';
+const SET_LOGIN_ERROR = "SET_LOGIN_ERROR"
+const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"
 
 //Action Creators
 
@@ -17,6 +19,9 @@ const setProducts = (products)=> ({ type: SET_PRODUCTS, products });
 const setUsers = (users)=> ({ type: SET_USERS, users });
 const _createUser = (user)=> ({ type: CREATE_USER, user })
 const _destroyProduct = (product)=> ({ type: DESTROY_PRODUCT, product});
+const setLoginError = (err) => ({ type: SET_LOGIN_ERROR, err });
+const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
+
 
 //Thunks
 
@@ -48,7 +53,19 @@ const destroyProduct = (product)=> {
  }
 };
 
-export { getProducts, getUsers, createUser, destroyProduct }
+const onLogin = (user) => { 
+  return async(dispatch)=> {
+    await axios.post('/api/users', user)
+    .then(response => {
+      return dispatch(setLoginSuccess(response.data));
+    })
+    .catch(e => {
+      return dispatch(setLoginError(e.message));
+    })
+  }
+}
+
+export { getProducts, getUsers, createUser, destroyProduct, onLogin }
 
 //Reducers
 
@@ -71,7 +88,17 @@ const store = createStore(
       return [...state, action.user];
     }
     return state;
-  }}), applyMiddleware(thunkMiddleware)
+  },
+  login: (state = [], action)=> {
+    if(action.type === SET_LOGIN_SUCCESS) {
+      return { ...state, email: '', password: '', err: null, user: action.user };
+    }
+    if(action.type === SET_LOGIN_ERROR) {
+      return { ...state, email: '', password: '', user: null, err: action.err, };
+    }
+    return state;
+  }
+}), applyMiddleware(thunkMiddleware)
 );
 
 export default store

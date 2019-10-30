@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { onLogin } from './reducer'
+import { login } from '../store'
 
 class _SignIn extends React.Component{
   constructor(){
@@ -18,12 +18,12 @@ class _SignIn extends React.Component{
 
   render(){
     const { email, password } = this.state
-    const { onLogin } = this.props
+    const { login } = this.props
     const { onChange } = this
 
     return (
       <div>
-        <form onSubmit={ () => onLogin(this.state)}>
+        <form onSubmit={ () => login(this.state)}>
           <div><label>Email: </label><input name="email" value={ email } onChange={ onChange } required/></div>
           <div><label>Password: </label><input name="password" value={ password } onChange={ onChange } required/></div>
           <button className="login">Sign in</button>
@@ -35,7 +35,7 @@ class _SignIn extends React.Component{
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLogin: (user)=> dispatch(onLogin(user))
+    login: (user)=> dispatch(login(user))
     }
 }
 

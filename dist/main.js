@@ -40531,6 +40531,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Routes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Routes */ "./src/Routes.js");
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _reducer_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../reducer/user */ "./reducer/user.js");
+/* harmony import */ var _SignIn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./SignIn */ "./src/SignIn.js");
+
 
 
 
@@ -40543,7 +40545,7 @@ class App extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Nav__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Routes__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Nav__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Routes__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_SignIn__WEBPACK_IMPORTED_MODULE_5__["SignIn"], null));
   }
 
 }
@@ -40741,6 +40743,81 @@ class Routes extends react__WEBPACK_IMPORTED_MODULE_0__["Component"] {
 
 /***/ }),
 
+/***/ "./src/SignIn.js":
+/*!***********************!*\
+  !*** ./src/SignIn.js ***!
+  \***********************/
+/*! exports provided: SignIn */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SignIn", function() { return SignIn; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store */ "./store.js");
+
+
+
+
+class _SignIn extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor() {
+    super();
+    this.state = {
+      email: '',
+      password: ''
+    };
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(ev) {
+    this.setState({
+      [ev.target.name]: ev.target.value
+    });
+  }
+
+  render() {
+    const {
+      email,
+      password
+    } = this.state;
+    const {
+      login
+    } = this.props;
+    const {
+      onChange
+    } = this;
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+      onSubmit: () => login(this.state)
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Email: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      name: "email",
+      value: email,
+      onChange: onChange,
+      required: true
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Password: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      name: "password",
+      value: password,
+      onChange: onChange,
+      required: true
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "login"
+    }, "Sign in")));
+  }
+
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    login: user => dispatch(Object(_store__WEBPACK_IMPORTED_MODULE_2__["login"])(user))
+  };
+};
+
+const SignIn = Object(react_redux__WEBPACK_IMPORTED_MODULE_1__["connect"])(null, mapDispatchToProps)(_SignIn);
+
+
+/***/ }),
+
 /***/ "./src/SingleProduct.js":
 /*!******************************!*\
   !*** ./src/SingleProduct.js ***!
@@ -40857,7 +40934,7 @@ Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED
 /*!******************!*\
   !*** ./store.js ***!
   \******************/
-/*! exports provided: getProducts, getUsers, createUser, destroyProduct, default */
+/*! exports provided: getProducts, getUsers, createUser, destroyProduct, onLogin, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -40866,6 +40943,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUsers", function() { return getUsers; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroyProduct", function() { return destroyProduct; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onLogin", function() { return onLogin; });
 /* harmony import */ var redux_thunk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js");
 /* harmony import */ var redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -40878,7 +40956,9 @@ const API = '/api';
 const SET_PRODUCTS = 'SET_PRODUCTS';
 const SET_USERS = 'SET_USERS';
 const CREATE_USER = 'CREATE_USER';
-const DESTROY_PRODUCT = 'DESTROY_PRODUCT'; //Action Creators
+const DESTROY_PRODUCT = 'DESTROY_PRODUCT';
+const SET_LOGIN_ERROR = "SET_LOGIN_ERROR";
+const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"; //Action Creators
 
 const setProducts = products => ({
   type: SET_PRODUCTS,
@@ -40898,6 +40978,16 @@ const _createUser = user => ({
 const _destroyProduct = product => ({
   type: DESTROY_PRODUCT,
   product
+});
+
+const setLoginError = err => ({
+  type: SET_LOGIN_ERROR,
+  err
+});
+
+const setLoginSuccess = user => ({
+  type: SET_LOGIN_SUCCESS,
+  user
 }); //Thunks
 
 
@@ -40929,6 +41019,16 @@ const destroyProduct = product => {
   };
 };
 
+const onLogin = user => {
+  return async dispatch => {
+    await axios__WEBPACK_IMPORTED_MODULE_2___default.a.post('/api/users', user).then(response => {
+      return dispatch(setLoginSuccess(response.data));
+    }).catch(e => {
+      return dispatch(setLoginError(e.message));
+    });
+  };
+};
+
  //Reducers
 
 const store = Object(redux__WEBPACK_IMPORTED_MODULE_1__["createStore"])(Object(redux__WEBPACK_IMPORTED_MODULE_1__["combineReducers"])({
@@ -40950,6 +41050,27 @@ const store = Object(redux__WEBPACK_IMPORTED_MODULE_1__["createStore"])(Object(r
 
     if (action.type === CREATE_USER) {
       return [...state, action.user];
+    }
+
+    return state;
+  },
+  login: (state = [], action) => {
+    if (action.type === SET_LOGIN_SUCCESS) {
+      return { ...state,
+        email: '',
+        password: '',
+        err: null,
+        user: action.user
+      };
+    }
+
+    if (action.type === SET_LOGIN_ERROR) {
+      return { ...state,
+        email: '',
+        password: '',
+        user: null,
+        err: action.err
+      };
     }
 
     return state;

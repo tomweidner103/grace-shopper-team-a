@@ -59,4 +59,7 @@ typings/
 
 # next.js build output
 .next
-./dist/main.js
+dist/main.js
+dist/main.js.map
+dist/main.js
+dist/main.js.map
