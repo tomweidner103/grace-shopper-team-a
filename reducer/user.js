@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const SET_USERS = 'SET_USERS'; 
+const SET_USERS = 'SET_USERS';
 
 const setUsers = users => ({
   type: SET_USERS,
