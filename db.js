@@ -147,10 +147,14 @@ const Cart = conn.define('cart', {
     defaultValue: UUIDV4
   },
   quantity: {
-    type: INTEGER
+    type: INTEGER,
+    validate: {
+      min : 1
+    }
   },
 });
 
+Cart.belongsTo(User)
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
@@ -162,13 +166,13 @@ Product.belongsTo(Cart);
 
 const sync = async () => {
   await conn.sync({ force: true });
-  // let users = [
-  //   {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
-  //   {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
-  //   {name: 'Oscar', email: 'oscar@email.com', password: 'OSCAR'},
-  //   {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
-  // ]
-  // const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
+  let users = [
+    {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
+    {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
+    {name: 'Oscar', email: 'oscar@email.com', password: 'OSCAR'},
+    {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
+  ]
+  const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
   let products = [
     {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'},
@@ -176,6 +180,12 @@ const sync = async () => {
     {name: 'BC', description: 'Best', price: 7, quantity: 1, imageURL: 'bc.jpg', genre: 'R&B'}
   ]
   const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+
+  let items =[
+    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+    {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  ]
+  await Promise.all(items.map( item => Cart.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
