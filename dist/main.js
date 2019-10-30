@@ -40788,7 +40788,9 @@ class _SignIn extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const {
       onChange
     } = this;
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "signin"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
       onSubmit: () => login(this.state)
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Email: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       name: "email",

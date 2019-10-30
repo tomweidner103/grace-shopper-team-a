@@ -22,7 +22,7 @@ class _SignIn extends React.Component{
     const { onChange } = this
 
     return (
-      <div>
+      <div className="signin">
         <form onSubmit={ () => login(this.state)}>
           <div><label>Email: </label><input name="email" value={ email } onChange={ onChange } required/></div>
           <div><label>Password: </label><input name="password" value={ password } onChange={ onChange } required/></div>
