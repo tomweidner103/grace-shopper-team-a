@@ -51,6 +51,18 @@ app.get('/api/cart', async ( req, res, next ) => {
   }
 });
 
+app.put('/api/cart/:id', async ( req, res, next ) => {
+  try {
+    const instance = await Cart.findByPk(req.params.id);
+    Object.assign(instance, req.body);
+    await instance.save();
+    res.send(instance);
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
+
 app.delete('/api/cart/:id', async ( req, res, next ) => {
   try {
     await Cart.destroy({ where: {id: req.params.id} });
@@ -60,6 +72,16 @@ app.delete('/api/cart/:id', async ( req, res, next ) => {
     next(ex);
   }
 });
+
+app.post('/api/cart/', async (req, res, next) => {
+  try {
+    const item = await Cart.create(req.body)
+    res.status(201).send(item)
+  }
+  catch(ex) {
+    next(ex)
+  }
+})
 
 db.sync()
   .then(() => {
