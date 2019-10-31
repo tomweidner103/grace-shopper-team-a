@@ -12,9 +12,9 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        < SignIn />
         < Nav />
         < Routes />
-        < SignIn />
       </div>
     );
   }

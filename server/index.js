@@ -43,7 +43,7 @@ app.get('/api/products/:id', async (req, res, next) => {
 
 app.get('/api/cart', async ( req, res, next ) => {
   try {
-    const cart = await Cart.findAll();
+    const cart = await Cart.findAll( { include: [ Product ] });
     res.send(cart);
   }
   catch(ex) {
