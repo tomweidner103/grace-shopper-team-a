@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 const Home = () => {
   return (
     <div>
-      <h1>Welcome!</h1>
+      <h1>Girl Put Your Records On...</h1>
     </div>
   );
 }
