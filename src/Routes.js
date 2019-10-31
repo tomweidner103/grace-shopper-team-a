@@ -10,7 +10,7 @@ class Routes extends Component {
     return (
       <Switch>
         <Route exact path='/' component = { Home } />
-        <Route path='/products' component = { Products } />
+        <Route exact path='/products' component = { Products } />
         <Route path='/products/:id' component = { SingleProduct } />
         <Route path='/cart' component = { Cart } />
       </Switch>

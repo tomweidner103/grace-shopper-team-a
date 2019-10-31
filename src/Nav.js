@@ -7,9 +7,11 @@ const Nav = () => {
     <header>
       <nav>
         <NavLink to='/'>Home</NavLink>
+        <NavLink to='/products'>Shop</NavLink>
+        <NavLink to='/cart'>Cart</NavLink>
       </nav>
     </header>
-  ); 
+  );
 }
 
 const mapState = state => {

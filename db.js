@@ -58,8 +58,8 @@ const Product = conn.define('product', {
     type: INTEGER
   },
   imageURL: {
-    type: STRING(1234),
-    defaultValue: 'randomalbumcover.jpg'
+    type: STRING,
+    defaultValue: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjWgtmipMXlAhWL3OAKHWYFDUAQjRx6BAgBEAQ&url=%2Furl%3Fsa%3Di%26source%3Dimages%26cd%3D%26ved%3D%26url%3Dhttps%253A%252F%252Fwww.teepublic.com%252Fsticker%252F2256665-vinyl-vintage-record%26psig%3DAOvVaw2RpA1PAzqb261Vz4lDRHaE%26ust%3D1572569538877598&psig=AOvVaw2RpA1PAzqb261Vz4lDRHaE&ust=1572569538877598'
   },
   genre: {
     type: ENUM('Rap', 'Rock', 'R&B', 'Alternative', 'Metal')
@@ -147,10 +147,14 @@ const Cart = conn.define('cart', {
     defaultValue: UUIDV4
   },
   quantity: {
-    type: INTEGER
+    type: INTEGER,
+    validate: {
+      min : 1
+    }
   },
 });
 
+Cart.belongsTo(User)
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
@@ -162,20 +166,26 @@ Product.belongsTo(Cart);
 
 const sync = async () => {
   await conn.sync({ force: true });
-  // let users = [
-  //   {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
-  //   {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
-  //   {name: 'Oscar', email: 'oscar@email.com', password: 'OSCAR'},
-  //   {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
-  // ]
-  // const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
+  let users = [
+    {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
+    {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
+    {name: 'Oscar', email: 'oscar@email.com', password: 'OSCAR'},
+    {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
+  ]
+  const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
   let products = [
-    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'},
-    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, imageURL: 'gkmc.jpg', genre: 'Rap'},
-    {name: 'BC', description: 'Best', price: 7, quantity: 1, imageURL: 'bc.jpg', genre: 'R&B'}
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: '', genre: 'Rap'},
+    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, imageURL: '', genre: 'Rap'},
+    {name: 'BC', description: 'Best', price: 7, quantity: 1, imageURL: '', genre: 'R&B'}
   ]
   const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+
+  let items =[
+    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+    {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  ]
+  await Promise.all(items.map( item => Cart.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
