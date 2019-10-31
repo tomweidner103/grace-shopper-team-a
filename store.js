@@ -12,6 +12,9 @@ const CREATE_USER = 'CREATE_USER';
 const DESTROY_PRODUCT = 'DESTROY_PRODUCT';
 const SET_LOGIN_ERROR = "SET_LOGIN_ERROR"
 const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"
+const SET_CART = 'SET_CART'; 
+const DESTROY = 'DESTROY';
+// const UPDATE_CART = 'UPDATE_CART';
 
 //Action Creators
 
@@ -21,7 +24,9 @@ const _createUser = (user)=> ({ type: CREATE_USER, user })
 const _destroyProduct = (product)=> ({ type: DESTROY_PRODUCT, product});
 const setLoginError = (err) => ({ type: SET_LOGIN_ERROR, err });
 const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
-
+const setCart = cart => ({ type: SET_CART, cart });
+const destroyCart = cart => ({ type: DESTROY, cart });
+// const update = cart => ({ type: UPDATE_CART, cart });
 
 //Thunks
 
@@ -65,7 +70,22 @@ const onLogin = (user) => {
   }
 }
 
-export { getProducts, getUsers, createUser, destroyProduct, onLogin }
+const setCartThunks = () => async dispatch => {
+  const cart = (await axios.get('/api/cart')).data;
+  dispatch(setCart(cart));
+};
+
+const destroyCartThunks = (id) => async dispatch => {
+  await axios.delete(`/api/cart/${id}`);
+  dispatch(destroyCart(id));
+};
+
+// export const updateThunks = (id, cartId) => async dispatch => {
+//   const cart = await axios.put(`/api/cart/${id}`, {cartId});
+//   dispatch(update(cart));
+// };
+
+export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, destroyCartThunks }
 
 //Reducers
 
@@ -97,6 +117,18 @@ const store = createStore(
       return { ...state, email: '', password: '', user: null, err: action.err, };
     }
     return state;
+  },
+  cart: (state = [], action) => {
+    switch (action.type) {
+      case SET_CART:
+          return action.cart;
+      case DESTROY:
+          return state.filter(cart => cart.id !== action.cart);
+      // case UPDATE_CART:
+      //     return state.map(cart => cart.id === action.cart.id ? action.cart : cart)
+      default:
+          return state
+    }
   }
 }), applyMiddleware(thunkMiddleware)
 );
