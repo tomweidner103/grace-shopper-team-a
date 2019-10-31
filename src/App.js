@@ -2,12 +2,12 @@ import React from 'react';
 import Nav from './Nav';
 import Routes from './Routes';
 import { connect } from 'react-redux';
-import { setUsersThunks } from '../reducer/user';
 import { SignIn } from './SignIn';
+import { getUsers } from '../store';
 
 class App extends React.Component {
   componentDidMount() {
-    this.props.setUsers();
+    this.props.getUsers();
   }
   render() {
     return (
@@ -21,7 +21,7 @@ class App extends React.Component {
 }
 
 const mapDispatchToAppProps = {
-  setUsers: setUsersThunks
+  getUsers: getUsers
 }
 
 export default connect(null, mapDispatchToAppProps)(App);
