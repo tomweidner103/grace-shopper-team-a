@@ -51,6 +51,28 @@ app.get('/api/cart', async ( req, res, next ) => {
   }
 });
 
+app.post('/api/cart', async (req, res, next) => {
+  try {
+    const item = await Cart.create(req.body)
+    res.status(201).send(item)
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
+
+// app.post('/api/cart', async ( req, res, next ) => {
+//   try {
+//     const product = await Product.findAll({ where: { id: req.body.cartId }})
+//     req.body.cartId = product[0].id
+//     const cart = await Cart.create(req.body, { include: [ Product ] });
+//     res.send(cart);
+//   }
+//   catch(ex) {
+//     next(ex);
+//   }
+// });
+
 app.put('/api/cart/:id', async ( req, res, next ) => {
   try {
     const instance = await Cart.findByPk(req.params.id);
@@ -72,16 +94,6 @@ app.delete('/api/cart/:id', async ( req, res, next ) => {
     next(ex);
   }
 });
-
-app.post('/api/cart/', async (req, res, next) => {
-  try {
-    const item = await Cart.create(req.body)
-    res.status(201).send(item)
-  }
-  catch(ex) {
-    next(ex)
-  }
-})
 
 db.sync()
   .then(() => {

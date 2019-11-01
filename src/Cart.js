@@ -21,24 +21,30 @@ class _Cart extends React.Component {
   }
   render() {
     const { products, cart, destroy } = this.props
-    console.log(this.props)
+    const items = cart.map( c => {
+      return {...c, cart: products.filter(product => c.productId === product.id)};
+    });
     return (
       <div>
-        Cart Items: { products.filter(product => product.id === cart.productId).length}
+        Cart Items: { products.map(product => product.id === cart.productId).length}
         <ul>
           {
-           products.map( product => product.id === cart.productId
-             ?
-            <div key={product.id} id='flex'>
-                <Link to={`/products/${product.id}`} activeclassname="active"><li key='img'><img src ={product.imageURL}></img></li></Link>
-                <Link to={`/products/${product.id}`} activeclassname="active"><h1 key='name'>{product.name}</h1></Link>
-                <li key='genre'>{product.genre}</li>
-                <li key='price'>{product.price}</li>
-                {/* <button onClick = { updateCart({...cart, quantity: this.state.quantity + 1 }) } >+</button> increase quantity of item in cart */}
-                {/* <button onClick = { updateCart({...cart, quantity: this.state.quantity - 1 }) } >-</button> decrease quantity of item in cart */}
-                <button onClick = { destroy }>Delete</button>
-           </div> 
-            : 'Nothing in cart')
+            products.map( product => console.log(product, 'p', cart ))
+            // products.map( product => console.log(product.id === cart.productId))
+            // items.map( item => console.log( item ) )
+            // (items.map( item => 
+            //   item.id === item.cart.productId && cart.length > 0 ?
+            //   <div key={item.id} id='flex'>
+            //     <Link to={`/products/${item.id}`} activeclassname="active"><li key='img'><img src ={item.imageURL}></img></li></Link>
+            //     <Link to={`/products/${item.id}`} activeclassname="active"><h1 key='name'>{item.name}</h1></Link>
+            //     <li key='genre'>{item.genre}</li>
+            //     <li key='price'>{item.price}</li>
+            //     {/* <button onClick = { updateCart({...cart, quantity: this.state.quantity + 1 }) } >+</button> increase quantity of item in cart */}
+            //     {/* <button onClick = { updateCart({...cart, quantity: this.state.quantity - 1 }) } >-</button> decrease quantity of item in cart */}
+            //   < button onClick = { destroy }>Delete</button>
+            //   </div>
+            // : 'Nothing here'
+            // ))
           }
         </ul>
       </div>
