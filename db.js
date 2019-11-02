@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { STRING, UUID, UUIDV4, INTEGER, ENUM } = Sequelize;
-const conn = new Sequelize(process.env.PORT || 'postgres://localhost/playback');
+const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/playback');
+const crypto =  require('crypto')
 
 const User = conn.define('user', {
   id: {
@@ -16,10 +17,15 @@ const User = conn.define('user', {
     // }
   },
   email: {
-    type: STRING
+    type: STRING,
+    unique: true
   },
   password: {
-    type: STRING
+    type: STRING,
+    allowNull: false
+  }, ///salt needed for encryption
+  salt: {
+    type: Sequelize.STRING
   }
 });
 
@@ -57,8 +63,8 @@ const Product = conn.define('product', {
     type: INTEGER
   },
   imageURL: {
-    type: STRING(1234),
-    defaultValue: 'randomalbumcover.jpg'
+    type: STRING,
+    defaultValue: 'https://i.pinimg.com/736x/6d/82/a5/6d82a57b6268a57a4b46d6ece3ea7f3d--vintage-music-vintage-stuff.jpg'
   },
   genre: {
     type: ENUM('Rap', 'Rock', 'R&B', 'Alternative', 'Metal')
@@ -139,12 +145,29 @@ const OrderDetail = conn.define('orderDetail', {
   }
 });
 
+const Cart = conn.define('cart', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
+  quantity: {
+    type: INTEGER,
+    validate: {
+      min : 1
+    }
+  },
+});
+
+Cart.belongsTo(User)
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
 OrderDetail.belongsTo(Order);
 // ProductDetail.belongsTo(Product);
 OrderDetail.hasMany(Product);
+Cart.hasMany(Product);
+Product.belongsTo(Cart);
 
 const sync = async () => {
   await conn.sync({ force: true });
@@ -156,10 +179,18 @@ const sync = async () => {
   ]
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
-  // let products = [
-  //   {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'}
-  // ]
-  // const [ Scorpion ] = await Promise.all(products.map( product => Product.create(product)));
+  let products = [
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: '', genre: 'Rap'},
+    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, imageURL: '', genre: 'Rap'},
+    {name: 'BC', description: 'Best', price: 7, quantity: 1, imageURL: '', genre: 'R&B'}
+  ]
+  const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+
+  let items =[
+    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+    {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  ]
+  await Promise.all(items.map( item => Cart.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
@@ -173,7 +204,41 @@ const sync = async () => {
   // ]
 }
 
+///generates random string
+User.getRandomString = function (length) {
+  return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
+};
+
+///part of SHA-2 cryto function to hash pw
+User.sha256 = function(password, salt){
+  let hash = crypto.createHmac('sha256', salt);
+  hash.update(password);
+  let value = hash.digest('hex');
+  return {
+    salt,
+    passwordHash: value
+  }
+};
+//uses two above methods to finally set salt/hash on pw, on login and for any change
+function saltHashPassword (user) {
+  if(user.changed('password')){
+  user.salt = User.getRandomString(12);
+  user.password = User.sha256(user.password, user.salt);
+  }
+};
+
+///function to check for correct pw in routes
+User.prototype.correctPassword = function(pwd) {
+  return User.sha256(pwd, this.salt()) === this.password()
+}
+
+//hooks using above methods to salt/hash pw for encryption
+User.beforeCreate(saltHashPassword);
+User.beforeUpdate(saltHashPassword);
+
+
 module.exports = {
+  conn,
   sync,
   models: {
     User,
@@ -183,5 +248,6 @@ module.exports = {
     Payment,
     Order,
     OrderDetail,
+    Cart
   }
 }

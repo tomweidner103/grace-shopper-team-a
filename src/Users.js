@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { setUsersThunks } from '../reducer/User';
+import { getUsers } from '../store';
 
 class Users extends React.Component {
   constructor() {
@@ -10,7 +10,7 @@ class Users extends React.Component {
     return (
       <ul>
         {
-          this.state.user.map( u => <li key={u.id}>{u.name}</li>)
+          this.props.user.map( u => <li key={u.id}>{u.name}</li>)
         }
       </ul>
     )
@@ -24,7 +24,7 @@ const mapStateToUsersProps = state => {
 }
 
 const mapDispatchToUserProps = {
-  setUsers: setUsersThunks
+  getUsers: getUsers
 }
 
 export default connect(mapStateToUsersProps, mapDispatchToUserProps)(Users);

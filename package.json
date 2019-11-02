@@ -17,6 +17,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.0",
     "pg": "^7.12.1",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
@@ -28,6 +29,8 @@
     "@babel/core": "^7.6.4",
     "@babel/preset-react": "^7.6.3",
     "babel-loader": "^8.0.6",
+    "connect-session-sequelize": "^6.0.0",
+    "passport": "^0.4.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "webpack": "^4.41.2",
@@ -37,7 +40,7 @@
     "postinstall": "npm run webpack",
     "webpack": "webpack",
     "webpack:dev": "webpack --watch --mode=development",
-    "start:dev": "DATABASE_URL=postgres://localhost/playback nodemon server/index.js --ignore dist/ --ignore src/ & npm run webpack:dev",
+    "start:dev": " nodemon server/index.js --ignore dist/ --ignore src/ & npm run webpack:dev",
     "start": "node server/index.js"
   },
   "babel": {

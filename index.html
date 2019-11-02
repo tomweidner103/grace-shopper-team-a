@@ -1,5 +1,104 @@
 <html>
 <head>
+  <style>
+    body {
+       font-family: impact;
+       -webkit-text-stroke-width: .25px;
+       -webkit-text-stroke-color:white;
+       color:black;
+       padding: 2rem;
+     }
+    nav {
+       display: flex;
+       justify-content: space-around;
+       padding: 1rem;
+     }
+     a {
+       -webkit-text-stroke-width: .25px;
+       -webkit-text-stroke-color: #2e06c1;
+       font-size: 1rem;
+       text-decoration: none;
+       color: #59c4c6;
+     }
+     a:focus {
+       text-decoration: line-through;
+       -webkit-text-stroke-width: 1.5px;
+       color: transparent;
+       -webkit-text-stroke-color: #59c4c6;
+     }
+     a:hover {
+       font-size: 1.25rem;
+       text-decoration: line-through;
+       -webkit-text-stroke-color: #59c4c6
+       transition: 0.25s ease;
+     }
+     #flex{
+       display: flex;
+       flex-direction: column;
+       border-radius: 2rem;
+       border: solid 1px black;
+       align-items:center;
+       justify-content: space-around;
+       margin: 1rem;
+       background-color:white;
+     }
+     li {
+       display: flex;
+       flex-direction: row;
+       padding: .75rem;
+     }
+
+     input{
+       height: 2rem;
+       font-size: 1rem;
+       margin: .5rem;
+       font-family: courier;
+       border: 1px;
+       border-style: solid;
+     }
+
+     button {
+       height: 2rem;
+       font-size: 1rem;
+       margin: .5rem;
+       font: impact;
+       border: black 1px;
+       border-style: solid;
+       font-family: impact;
+       color: white;
+       -webkit-text-stroke-width: 1px;
+       -webkit-text-stroke-color:black;
+     }
+
+     button:hover {
+       color: #e64a2b;
+       -webkit-text-stroke-color: none !important;
+       -webkit-text-stroke-color:#e64a2b;
+       size: 5rem;
+       transition: color 0.25 ease;
+     }
+     select {
+       font-family: impact;
+       color:#e64a2b;
+     }
+     #description {
+       font-family: courier;
+     }
+     .signin {
+       display: flex;
+
+       justify-content: flex-end;
+       font-size: .75rem;
+     }
+     .signin input, button {
+       display: flex;
+       justify-content: flex-end;
+       height: 1.5rem;
+       margin: .5rem;
+       font-size: .75rem;
+     }
+
+  </style>
   <script src="/dist/main.js" defer></script>
 </head>
 <body>
