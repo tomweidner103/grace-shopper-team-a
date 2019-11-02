@@ -18,16 +18,18 @@
        -webkit-text-stroke-color: #2e06c1;
        font-size: 1rem;
        text-decoration: none;
-       color: #3100e5;
+       color: #59c4c6;
      }
      a:focus {
        text-decoration: line-through;
        -webkit-text-stroke-width: 1.5px;
        color: transparent;
+       -webkit-text-stroke-color: #59c4c6;
      }
      a:hover {
        font-size: 1.25rem;
        text-decoration: line-through;
+       -webkit-text-stroke-color: #59c4c6
        transition: 0.25s ease;
      }
      #flex{
@@ -84,13 +86,13 @@
      }
      .signin {
        display: flex;
-       align-content: center;
-       align-items: center;
 
-       justify-content: center;
+       justify-content: flex-end;
        font-size: .75rem;
      }
      .signin input, button {
+       display: flex;
+       justify-content: flex-end;
        height: 1.5rem;
        margin: .5rem;
        font-size: .75rem;

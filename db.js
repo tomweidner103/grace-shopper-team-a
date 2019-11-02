@@ -64,7 +64,7 @@ const Product = conn.define('product', {
   },
   imageURL: {
     type: STRING,
-    defaultValue: 'https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwjWgtmipMXlAhWL3OAKHWYFDUAQjRx6BAgBEAQ&url=%2Furl%3Fsa%3Di%26source%3Dimages%26cd%3D%26ved%3D%26url%3Dhttps%253A%252F%252Fwww.teepublic.com%252Fsticker%252F2256665-vinyl-vintage-record%26psig%3DAOvVaw2RpA1PAzqb261Vz4lDRHaE%26ust%3D1572569538877598&psig=AOvVaw2RpA1PAzqb261Vz4lDRHaE&ust=1572569538877598'
+    defaultValue: 'https://i.pinimg.com/736x/6d/82/a5/6d82a57b6268a57a4b46d6ece3ea7f3d--vintage-music-vintage-stuff.jpg'
   },
   genre: {
     type: ENUM('Rap', 'Rock', 'R&B', 'Alternative', 'Metal')
