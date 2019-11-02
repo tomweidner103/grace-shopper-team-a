@@ -10,19 +10,17 @@ class _Products extends Component {
    super();
  }
  async componentDidMount() {
-   console.log('hey');
    await this.props.getProducts()
  }
  render() {
    const {products} = this.props
-   console.log(products);
    return (
      <div>
        <ul>
          {
            products.map( product => {
              return (
-               <div key='allProducts' id='flex'>
+               <div key={product.id} id='flex'>
                   <Link to={`/products/${product.id}`} activeclassname="active"><li key='img'><img src ={product.imageURL}></img></li></Link>
                   <Link to={`/products/${product.id}`} activeclassname="active"><h1 key='name'>{product.name}</h1></Link>
                   <li key='genre'>{product.genre}</li>

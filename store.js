@@ -12,7 +12,8 @@ const CREATE_USER = 'CREATE_USER';
 const DESTROY_PRODUCT = 'DESTROY_PRODUCT';
 const SET_LOGIN_ERROR = "SET_LOGIN_ERROR"
 const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"
-const SET_CART = 'SET_CART'; 
+const SET_CART = 'SET_CART';
+const CREATE_CART = 'CREATE_CART';
 const DESTROY = 'DESTROY';
 // const UPDATE_CART = 'UPDATE_CART';
 
@@ -25,6 +26,7 @@ const _destroyProduct = (product)=> ({ type: DESTROY_PRODUCT, product});
 const setLoginError = (err) => ({ type: SET_LOGIN_ERROR, err });
 const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
 const setCart = cart => ({ type: SET_CART, cart });
+const createCart = cart => ({ type: CREATE_CART, cart })
 const destroyCart = cart => ({ type: DESTROY, cart });
 // const update = cart => ({ type: UPDATE_CART, cart });
 
@@ -75,6 +77,12 @@ const setCartThunks = () => async dispatch => {
   dispatch(setCart(cart));
 };
 
+const createCartThunks = (payload) => async dispatch => {
+  const cart = (await axios.post('/api/cart', payload)).data;
+  console.log(cart)
+  dispatch(createCart(cart));
+}
+
 const destroyCartThunks = (id) => async dispatch => {
   await axios.delete(`/api/cart/${id}`);
   dispatch(destroyCart(id));
@@ -85,7 +93,7 @@ const destroyCartThunks = (id) => async dispatch => {
 //   dispatch(update(cart));
 // };
 
-export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, destroyCartThunks }
+export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, createCartThunks, destroyCartThunks }
 
 //Reducers
 
@@ -122,6 +130,8 @@ const store = createStore(
     switch (action.type) {
       case SET_CART:
           return action.cart;
+      case CREATE_CART:
+          return [...state, action.cart];
       case DESTROY:
           return state.filter(cart => cart.id !== action.cart);
       // case UPDATE_CART:
