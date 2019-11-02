@@ -21,7 +21,11 @@ class _Products extends Component {
            products.map( product => {
              return (
                <div key={product.id} id='flex'>
-                  <Link to={`/products/${product.id}`} activeclassname="active"><li key='img'><img src ={product.imageURL}></img></li></Link>
+                  {/* <Link to={`/products/${product.id}`} activeclassname="active"> */}
+
+                  <li key='img'><img src ={product.imageURL}></img></li>
+
+                  {/* </Link> */}
                   <Link to={`/products/${product.id}`} activeclassname="active"><h1 key='name'>{product.name}</h1></Link>
                   <li key='genre'>{product.genre}</li>
                   <li key='price'>{product.price}</li>
