@@ -21,6 +21,13 @@ app.get('/api/users', async (req, res, next) => {
   }
 });
 
+app.post('/api/users', async (req, res, next) => {
+  console.log("in post")
+  User.create(req.body)
+      .then(user => res.status(201).send(user))
+      .catch(next)
+})
+
 app.get('/api/products', async (req, res, next) => {
   try {
     const products = await Product.findAll();

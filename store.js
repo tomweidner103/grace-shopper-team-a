@@ -46,9 +46,12 @@ const getUsers = ()=> {
   }
 };
 
-const createUser = ()=> {
+const createUser = (user)=> {
+  console.log("in store for user")
   return async(dispatch)=> {
-    const created = (await axios.post(`${API}/users`, user)).data;
+    const a = 10
+    console.log(a)
+    const created = (await axios.post(`${API}/users`)).data
     dispatch(_createUser(created));
   }
 };
@@ -108,7 +111,7 @@ const store = createStore(
       }
       return state;
     },
-    users: (state = [], action)=> {
+    user: (state = [], action)=> {
       if(action.type === SET_USERS) {
         return action.users
       }
