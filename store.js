@@ -15,7 +15,9 @@ const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"
 const SET_CART = 'SET_CART';
 const CREATE_CART = 'CREATE_CART';
 const DESTROY = 'DESTROY';
-// const UPDATE_CART = 'UPDATE_CART';
+const SET_LINEITEM ='SET_LINEITEM';
+const CREATE_LINE_ITEM ='CREATE_LINE_ITEM';
+const UPDATE_CART = 'UPDATE_CART';
 
 //Action Creators
 
@@ -28,7 +30,8 @@ const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
 const setCart = cart => ({ type: SET_CART, cart });
 const createCart = cart => ({ type: CREATE_CART, cart })
 const destroyCart = cart => ({ type: DESTROY, cart });
-// const update = cart => ({ type: UPDATE_CART, cart });
+const _createLineItem = (lineitem) => ({ type: CREATE_LINE_ITEM, lineitem})
+const update = cart => ({ type: UPDATE_CART, cart });
 
 //Thunks
 
@@ -60,7 +63,7 @@ const destroyProduct = (product)=> {
  }
 };
 
-const onLogin = (user) => { 
+const onLogin = (user) => {
   return async(dispatch)=> {
     await axios.post(`${API}/login`, user)
     .then(response => {
@@ -79,7 +82,6 @@ const setCartThunks = () => async dispatch => {
 
 const createCartThunks = (payload) => async dispatch => {
   const cart = (await axios.post('/api/cart', payload)).data;
-  console.log(cart)
   dispatch(createCart(cart));
 }
 
@@ -88,12 +90,19 @@ const destroyCartThunks = (id) => async dispatch => {
   dispatch(destroyCart(id));
 };
 
-// export const updateThunks = (id, cartId) => async dispatch => {
-//   const cart = await axios.put(`/api/cart/${id}`, {cartId});
-//   dispatch(update(cart));
-// };
+const createLineItem = ()=> {
+  return async(dispatch)=> {
+    const created = (await axios.post(`${API}/cart`, lineitem)).data;
+    dispatch(_createLineItem(created));
+  }
+};
 
-export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, createCartThunks, destroyCartThunks }
+const updateThunks = (id, method) => async dispatch => {
+  const cart = (await axios.put(`/api/cart`, {id: id, method})).data;
+  dispatch(update(cart));
+};
+
+export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, createCartThunks, destroyCartThunks, updateThunks, createLineItem }
 
 //Reducers
 
@@ -134,11 +143,19 @@ const store = createStore(
           return [...state, action.cart];
       case DESTROY:
           return state.filter(cart => cart.id !== action.cart);
-      // case UPDATE_CART:
-      //     return state.map(cart => cart.id === action.cart.id ? action.cart : cart)
+      case UPDATE_CART:
+        console.log(action);
+          return state.map(cart => cart.id === action.cart.id ? action.cart : cart)
       default:
           return state
     }
+  },
+  lineitem: (state = [], action) => {
+    switch (action.type) {
+      case CREATE_LINE_ITEM:
+        return [...state, action.cart];
+    }
+    return state;
   }
 }), applyMiddleware(thunkMiddleware)
 );
