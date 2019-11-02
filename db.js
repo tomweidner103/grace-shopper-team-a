@@ -161,8 +161,11 @@ Payment.belongsTo(Order);
 OrderDetail.belongsTo(Order);
 // ProductDetail.belongsTo(Product);
 OrderDetail.hasMany(Product);
-Cart.hasMany(Product);
-Product.belongsTo(Cart);
+Product.hasMany(Cart);
+Cart.belongsTo(Product);
+
+// Cart.hasMany(Product);
+// Product.belongsTo(Cart);
 
 const sync = async () => {
   await conn.sync({ force: true });

@@ -3,11 +3,12 @@ import Nav from './Nav';
 import Routes from './Routes';
 import { connect } from 'react-redux';
 import { SignIn } from './SignIn';
-import { getUsers } from '../store';
+import { getUsers, getProducts } from '../store';
 
 class App extends React.Component {
   componentDidMount() {
     this.props.getUsers();
+    this.props.getProducts();
   }
   render() {
     return (
@@ -21,7 +22,8 @@ class App extends React.Component {
 }
 
 const mapDispatchToAppProps = {
-  getUsers: getUsers
+  getUsers: getUsers,
+  getProducts: getProducts
 }
 
 export default connect(null, mapDispatchToAppProps)(App);
