@@ -21,7 +21,7 @@ const DESTROY = 'DESTROY';
 
 const setProducts = (products)=> ({ type: SET_PRODUCTS, products });
 const setUsers = (users)=> ({ type: SET_USERS, users });
-const _createUser = (user)=> ({ type: CREATE_USER, user })
+const _createUser = (user)=> ({ type: CREATE_USER, user });
 const _destroyProduct = (product)=> ({ type: DESTROY_PRODUCT, product});
 const setLoginError = (err) => ({ type: SET_LOGIN_ERROR, err });
 const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
@@ -47,14 +47,11 @@ const getUsers = ()=> {
 };
 
 const createUser = (user)=> {
-  console.log("in store for user")
-  return async(dispatch)=> {
-    const a = 10
-    console.log(a)
-    const created = (await axios.post(`${API}/users`)).data
-    dispatch(_createUser(created));
+  return async(dispatch) => {
+    const created = (await axios.post('/api/users', user)).data
+    dispatch(_createUser(created))
   }
-};
+}
 
 const destroyProduct = (product)=> {
  return async(dispatch)=> {

@@ -9,9 +9,6 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const router = require("express").Router();
 
-
-
-
 app.use(express.json());
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 app.get('/', (req, res, next)=> {
@@ -29,10 +26,13 @@ app.get('/api/users', async (req, res, next) => {
 });
 
 app.post('/api/users', async (req, res, next) => {
-  console.log("in post")
-  User.create(req.body)
-      .then(user => res.status(201).send(user))
-      .catch(next)
+  try {
+    const user = User.create(req.body)
+    res.status(201).send(user)
+  }
+  catch(ex) {
+    next(ex)
+  }
 })
 
 app.get('/api/products', async (req, res, next) => {
