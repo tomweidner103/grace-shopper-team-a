@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { STRING, UUID, UUIDV4, INTEGER, ENUM } = Sequelize;
+const { STRING, UUID, UUIDV4, INTEGER, ENUM, BOOLEAN } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/playback');
 const crypto =  require('crypto')
 
@@ -72,6 +72,33 @@ const Product = conn.define('product', {
   },
   genre: {
     type: ENUM('Rap', 'Rock', 'R&B', 'Alternative', 'Metal')
+  }
+});
+
+const Lineitem = conn.define('lineitem', {
+  name: STRING,
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
+  quantity: {
+    type: INTEGER,
+    validate: {
+      min : 1
+    }
+  },
+});
+
+const Cart = conn.define('cart', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
+  purchased: {
+    type: BOOLEAN,
+    defaultValue: false
   }
 });
 
@@ -149,29 +176,20 @@ const OrderDetail = conn.define('orderDetail', {
   }
 });
 
-const Cart = conn.define('cart', {
-  id: {
-    type: UUID,
-    primaryKey: true,
-    defaultValue: UUIDV4
-  },
-  quantity: {
-    type: INTEGER,
-    validate: {
-      min : 1
-    }
-  },
-});
 
-Cart.belongsTo(User)
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
 OrderDetail.belongsTo(Order);
 // ProductDetail.belongsTo(Product);
+
 OrderDetail.hasMany(Product);
-Cart.hasMany(Product);
-Product.belongsTo(Cart);
+
+Cart.belongsTo(User);
+Cart.hasMany(Lineitem);
+Lineitem.belongsTo(Cart);
+Product.hasMany(Lineitem);
+Lineitem.belongsTo(Product);
 
 const sync = async () => {
   await conn.sync({ force: true });
@@ -184,9 +202,9 @@ const sync = async () => {
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
   let products = [
-    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: '', genre: 'Rap'},
-    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, imageURL: '', genre: 'Rap'},
-    {name: 'BC', description: 'Best', price: 7, quantity: 1, imageURL: '', genre: 'R&B'}
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
+    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
+    {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
   ]
   const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
 
@@ -194,7 +212,7 @@ const sync = async () => {
     {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
     {quantity : 3, productId : BC.id, userId : Alexandra.id}
   ]
-  await Promise.all(items.map( item => Cart.create(item)));
+  await Promise.all(items.map( item => Lineitem.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
@@ -252,6 +270,7 @@ module.exports = {
     Payment,
     Order,
     OrderDetail,
+    Lineitem,
     Cart
   }
 }

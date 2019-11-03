@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const db = require('../db');
-const { conn, models: { User, Guest, Product, Payment, Order, OrderDetail, Cart } } = require('../db');
+const { conn, models: { User, Guest, Product, Payment, Order, OrderDetail, Cart, Lineitem } } = require('../db');
 const port = process.env.PORT || 3005;
 const session = require("express-session");
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -57,7 +57,7 @@ app.get('/api/products/:id', async (req, res, next) => {
 
 app.get('/api/cart', async ( req, res, next ) => {
   try {
-    const cart = await Cart.findAll( { include: [ Product ] });
+    const cart = await Lineitem.findAll( { include: [ Product ] });
     res.send(cart);
   }
   catch(ex) {
@@ -87,17 +87,25 @@ app.post('/api/cart', async (req, res, next) => {
 //   }
 // });
 
-app.put('/api/cart/:id', async ( req, res, next ) => {
+app.put('/api/cart', async ( req, res, next ) => {
   try {
-    const instance = await Cart.findByPk(req.params.id);
-    Object.assign(instance, req.body);
-    await instance.save();
+    const instance = await Lineitem.findByPk(req.body.id, {include: [Product]});
+    if (req.body.method === 'add') {
+      instance.quantity = ++instance.quantity;
+    }
+    if (req.body.method === 'subtract' && instance.quantity > 1) {
+      instance.quantity = --instance.quantity;
+    }
+    instance.save();
+
     res.send(instance);
   }
   catch(ex) {
     next(ex)
   }
 });
+
+//cartID to send in for validation
 
 app.delete('/api/cart/:id', async ( req, res, next ) => {
   try {
