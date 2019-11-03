@@ -12,13 +12,17 @@ const User = conn.define('user', {
   name: {
     type: STRING,
     allowNull: false,
-    // validate: {
-    //   notEmpty: true
-    // }
+    validate: {
+      notEmpty: true
+    }
   },
   email: {
     type: STRING,
-    unique: true
+    unique: true,
+    validate: {
+      notEmpty: true,
+      isEmail: true
+    }
   },
   password: {
     type: STRING,

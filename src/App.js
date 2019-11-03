@@ -2,7 +2,6 @@ import React from 'react';
 import Nav from './Nav';
 import Routes from './Routes';
 import { connect } from 'react-redux';
-import { SignIn } from './SignIn';
 import { getUsers, getProducts } from '../store';
 
 class App extends React.Component {
@@ -13,7 +12,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        < SignIn />
         < Nav />
         < Routes />
       </div>
