@@ -23,11 +23,11 @@ class _Login extends React.Component{
 
     return (
       <div className="login">
-        <form onSubmit={ () => onLogin(this.state)}>
+        <form onSubmit={ (ev) =>{ev.preventDefault(); onLogin(this.state)}}>
           <div><label>Email Address</label><input name="email" type="email" placeholder="enter your reistered email id" value={ email } onChange={ onChange } required/></div>
           <div><label>Password</label><input name="password" type="password" placeholder="enter your password" value={ password } onChange={ onChange } required/></div>
           <button className="onLogin">Login</button>
-        </form> 
+        </form>
       </div>
     );
   }
