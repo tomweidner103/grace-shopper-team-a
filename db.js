@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const { STRING, UUID, UUIDV4, INTEGER, ENUM, BOOLEAN } = Sequelize;
-const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/playback');
+const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/playback', {logging:false});
 const crypto =  require('crypto')
 
 const User = conn.define('user', {
@@ -189,7 +189,7 @@ Product.hasMany(Lineitem);
 Lineitem.belongsTo(Product);
 
 const sync = async () => {
-  await conn.sync({ force: true });
+  await conn.sync();
   let users = [
     {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
     {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
@@ -224,28 +224,27 @@ const sync = async () => {
 }
 
 ///generates random string
-User.getRandomString = function (length) {
+const getRandomString = function (length) {
   return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
 };
 
 ///part of SHA-2 cryto function to hash pw
-User.sha256 = function(password, salt){
-  let hash = crypto.createHmac('sha256', salt);
-  hash.update(password);
-  let value = hash.digest('hex');
-  return value;
+const sha256 = function(password, salt){
+  console.log('passowd', password)
+  console.log('salt', salt)
+  let hash = crypto.createHash('RSA-SHA256').update(password).update(salt).digest('hex')
+  return hash;
 };
 //uses two above methods to finally set salt/hash on pw, on login and for any change
 function saltHashPassword (user) {
   if(user.changed('password')){
-  user.salt = User.getRandomString(12);
-  user.password = User.sha256(user.password, user.salt);
+  user.password = sha256(user.password, '123445678910');
   }
 };
 
 ///function to check for correct pw in routes
 User.prototype.correctPassword = function(pwd) {
-  return User.sha256(pwd, this.salt()) === this.password()
+  return sha256(pwd, '123445678910')
 }
 
 //hooks using above methods to salt/hash pw for encryption

@@ -8,12 +8,15 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const router = require('express').Router();
+const volleyball = require('volleyball')
 
 app.use(express.json());
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
 app.get('/', (req, res, next)=> {
   res.sendFile(path.join(__dirname, '../index.html'));
 });
+
+app.use(volleyball)
 
 app.get('/api/users', async (req, res, next) => {
   try {
@@ -127,7 +130,7 @@ app.listen(port, ()=> console.log(`listening on port ${port}`));
 passport.serializeUser((user, done) => done(null, user.id))
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await db.models.user.findById(id)
+    const user = await User.findByPk(id)
     done(null, user)
   } catch (err) {
     done(err)
@@ -155,23 +158,26 @@ app.use(passport.session());
 app.use(express.urlencoded({extended: true}))
 
 ////post route, first finds user with email => if not valid email, err, => if email exits but password doesnt match, err => both match, session logs in
-router.post('/login', (req, res, next) => {
+app.post('/api/login', (req, res, next) => {
+  console.log(req.body)
   User.findOne({where:{email: req.body.email}})
     .then(user => {
+      console.log(req.body)
       if (!user){
         res.status(401).send('Wrong email and/or password');
-      } else if (!user.correctPassword(req.body.password)){
+      } else if (!user.correctPassword(req.body.password, user)){
         req.status(401).send('Wrong email and/or password');
       } else {
+        
         req.login(user, err => (err ? next(err) : res.json(user)));
-        res.redirect('/api/products');
+        // res.redirect('/api/products');
       }
-    })
+    }).then(() => console.log(req.user))
     .catch(next)
   });
 
 ////for sign up once we have it, create user with body info, once created, logs in. if not created because email exists in db, error occurs
-router.post('/api/register', (req, res, next)=>{
+app.post('/api/register', (req, res, next)=>{
   User.create(req.body)
     .then(user => {
       req.session.user = user
