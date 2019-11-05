@@ -27,6 +27,9 @@ const User = conn.define('user', {
   password: {
     type: STRING,
     allowNull: false
+  },
+  salt: {
+    type: Sequelize.STRING
   }
 });
 
@@ -224,12 +227,12 @@ const sync = async () => {
 }
 
 ///generates random string
-User.getRandomString = function (length) {
+const getRandomString = function (length) {
   return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
 };
 
 ///part of SHA-2 cryto function to hash pw
-User.sha256 = function(password, salt){
+const sha256 = function(password, salt){
   let hash = crypto.createHmac('sha256', salt);
   hash.update(password);
   let value = hash.digest('hex');
@@ -238,14 +241,14 @@ User.sha256 = function(password, salt){
 //uses two above methods to finally set salt/hash on pw, on login and for any change
 function saltHashPassword (user) {
   if(user.changed('password')){
-  user.salt = User.getRandomString(12);
-  user.password = User.sha256(user.password, user.salt);
+  user.salt = getRandomString(12);
+  user.password = sha256(user.password, user.salt);
   }
 };
 
 ///function to check for correct pw in routes
 User.prototype.correctPassword = function(pwd) {
-  return User.sha256(pwd, this.salt()) === this.password()
+  return sha256(pwd, this.salt)
 }
 
 //hooks using above methods to salt/hash pw for encryption
