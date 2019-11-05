@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
-const { STRING, UUID, UUIDV4, INTEGER, ENUM } = Sequelize;
-const conn = new Sequelize(process.env.PORT || 'postgres://localhost/playback');
+const { STRING, UUID, UUIDV4, INTEGER, ENUM, BOOLEAN } = Sequelize;
+const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/playback', {logging:false});
+const crypto =  require('crypto')
 
 const User = conn.define('user', {
   id: {
@@ -11,15 +12,21 @@ const User = conn.define('user', {
   name: {
     type: STRING,
     allowNull: false,
-    // validate: {
-    //   notEmpty: true
-    // }
+    validate: {
+      notEmpty: true
+    }
   },
   email: {
-    type: STRING
+    type: STRING,
+    unique: true,
+    validate: {
+      notEmpty: true,
+      isEmail: true
+    }
   },
   password: {
-    type: STRING
+    type: STRING,
+    allowNull: false
   }
 });
 
@@ -57,11 +64,38 @@ const Product = conn.define('product', {
     type: INTEGER
   },
   imageURL: {
-    type: STRING(1234),
-    defaultValue: 'randomalbumcover.jpg'
+    type: STRING,
+    defaultValue: 'https://i.pinimg.com/736x/6d/82/a5/6d82a57b6268a57a4b46d6ece3ea7f3d--vintage-music-vintage-stuff.jpg'
   },
   genre: {
     type: ENUM('Rap', 'Rock', 'R&B', 'Alternative', 'Metal')
+  }
+});
+
+const Lineitem = conn.define('lineitem', {
+  name: STRING,
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
+  quantity: {
+    type: INTEGER,
+    validate: {
+      min : 1
+    }
+  },
+});
+
+const Cart = conn.define('cart', {
+  id: {
+    type: UUID,
+    primaryKey: true,
+    defaultValue: UUIDV4
+  },
+  purchased: {
+    type: BOOLEAN,
+    defaultValue: false
   }
 });
 
@@ -139,15 +173,23 @@ const OrderDetail = conn.define('orderDetail', {
   }
 });
 
+
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
 OrderDetail.belongsTo(Order);
 // ProductDetail.belongsTo(Product);
+
 OrderDetail.hasMany(Product);
 
+Cart.belongsTo(User);
+Cart.hasMany(Lineitem);
+Lineitem.belongsTo(Cart);
+Product.hasMany(Lineitem);
+Lineitem.belongsTo(Product);
+
 const sync = async () => {
-  await conn.sync({ force: true });
+  await conn.sync();
   let users = [
     {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
     {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
@@ -156,10 +198,18 @@ const sync = async () => {
   ]
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
-  // let products = [
-  //   {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, imageURL: 'scorpio.jpg', genre: 'Rap'}
-  // ]
-  // const [ Scorpion ] = await Promise.all(products.map( product => Product.create(product)));
+  let products = [
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
+    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
+    {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
+  ]
+  const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+
+  let items =[
+    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+    {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  ]
+  await Promise.all(items.map( item => Lineitem.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
@@ -173,7 +223,37 @@ const sync = async () => {
   // ]
 }
 
+///generates random string
+const getRandomString = function (length) {
+  return crypto.randomBytes(Math.ceil(length/2)).toString('hex').slice(0,length);
+};
+
+///part of SHA-2 cryto function to hash pw
+const sha256 = function(password, salt){
+  console.log('passowd', password)
+  console.log('salt', salt)
+  let hash = crypto.createHash('RSA-SHA256').update(password).update(salt).digest('hex')
+  return hash;
+};
+//uses two above methods to finally set salt/hash on pw, on login and for any change
+function saltHashPassword (user) {
+  if(user.changed('password')){
+  user.password = sha256(user.password, '123445678910');
+  }
+};
+
+///function to check for correct pw in routes
+User.prototype.correctPassword = function(pwd) {
+  return sha256(pwd, '123445678910')
+}
+
+//hooks using above methods to salt/hash pw for encryption
+User.beforeCreate(saltHashPassword);
+User.beforeUpdate(saltHashPassword);
+
+
 module.exports = {
+  conn,
   sync,
   models: {
     User,
@@ -183,5 +263,7 @@ module.exports = {
     Payment,
     Order,
     OrderDetail,
+    Lineitem,
+    Cart
   }
 }
