@@ -27,9 +27,6 @@ const User = conn.define('user', {
   password: {
     type: STRING,
     allowNull: false
-  }, ///salt needed for encryption
-  salt: {
-    type: Sequelize.STRING
   }
 });
 
@@ -236,10 +233,7 @@ User.sha256 = function(password, salt){
   let hash = crypto.createHmac('sha256', salt);
   hash.update(password);
   let value = hash.digest('hex');
-  return {
-    salt,
-    passwordHash: value
-  }
+  return value;
 };
 //uses two above methods to finally set salt/hash on pw, on login and for any change
 function saltHashPassword (user) {
