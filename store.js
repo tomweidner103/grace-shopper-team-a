@@ -61,7 +61,7 @@ const createUser = (user)=> {
 const updateUserThunks = (id, payload) => async dispatch => {
   const user = (await axios.put(`/api/users`, {id: id, ...payload})).data;
   dispatch(updateUser(user));
-};
+}; 
 
 const destroyProduct = (product)=> {
  return async(dispatch)=> {

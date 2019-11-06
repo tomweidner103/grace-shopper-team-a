@@ -186,7 +186,7 @@ Cart.hasMany(Lineitem);
 Lineitem.belongsTo(Cart);
 Product.hasMany(Lineitem);
 Lineitem.belongsTo(Product);
-
+ 
 const sync = async () => {
   await conn.sync({ force: false });
   // let users = [

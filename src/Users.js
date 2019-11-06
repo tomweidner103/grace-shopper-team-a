@@ -18,7 +18,7 @@ class Users extends React.Component {
             <Link to={`/users/${u.id}`}>{u.name}</Link><br/>
             {u.email}
             </li>)
-        }
+        } 
       </ul>
     )
   }

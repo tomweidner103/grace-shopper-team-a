@@ -17,7 +17,7 @@ constructor(props) {
 }
 onChange(ev) {
   this.setState({ [ev.target.name] : ev.target.value });
-}
+} 
 async updateUser(ev) {
   ev.preventDefault();
   const payload = {name: this.state.name, email: this.state.email}

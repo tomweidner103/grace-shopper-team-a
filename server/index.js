@@ -23,7 +23,7 @@ app.get('/api/users', async (req, res, next) => {
   catch(ex) {
     next(ex)
   }
-});
+}); 
 
 app.post('/api/users', async (req, res, next) => {
   try {
