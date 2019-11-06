@@ -35,6 +35,28 @@ app.post('/api/users', async (req, res, next) => {
   }
 })
 
+app.put('/api/users', async ( req, res, next ) => {
+  try {
+    const instance = await User.findByPk(req.body.id);
+    Object.assign(instance, req.body);
+    instance.save();
+    res.send(instance);
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
+
+app.get('/api/users/:id', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    res.send(user)
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
+
 app.get('/api/products', async (req, res, next) => {
   try {
     const products = await Product.findAll();

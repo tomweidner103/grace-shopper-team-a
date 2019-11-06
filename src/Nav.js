@@ -11,6 +11,7 @@ const Nav = () => {
         <NavLink to='/cart'>Cart</NavLink>
         <NavLink to='/login'>Login</NavLink>
         <NavLink to='/register'>Register</NavLink>
+        <NavLink to='/users'>Users</NavLink>
       </nav>
     </header>
   );
