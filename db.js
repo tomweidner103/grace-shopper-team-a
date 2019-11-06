@@ -173,7 +173,6 @@ const OrderDetail = conn.define('orderDetail', {
   }
 });
 
-
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
@@ -265,6 +264,6 @@ module.exports = {
     Order,
     OrderDetail,
     Lineitem,
-    Cart
+    Cart,
   }
 }

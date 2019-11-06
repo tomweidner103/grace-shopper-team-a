@@ -8,6 +8,7 @@ import Users from './Users'
 import SingleUser from './SingleUser';
 import { Login } from './Login';
 import { Register } from './Register';
+// import Admin from './Admin';
 
 class Routes extends Component {
   render() {
@@ -21,6 +22,7 @@ class Routes extends Component {
         <Route path='/users/:id' component = { SingleUser } />
         <Route path='/products/:id' component = { SingleProduct } />
         <Route path='/cart' component = { Cart } />
+        {/* <Route path='/admin' component = { Admin } /> */}
       </Switch>
     );
   }
