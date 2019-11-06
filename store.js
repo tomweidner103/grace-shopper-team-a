@@ -72,7 +72,7 @@ const destroyProduct = (product)=> {
 
 const onLogin = (user) => {
   return async(dispatch)=> {
-    await axios.post(`${API}/login`, user)
+    await axios.post(`/api/login`, user)
     .then(response => {
       return dispatch(setLoginSuccess(response.data));
     })
