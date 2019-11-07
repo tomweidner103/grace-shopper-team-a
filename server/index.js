@@ -8,6 +8,9 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const router = require('express').Router();
+const volleyball = require('volleyball');
+
+app.use(volleyball);
 
 app.use(express.json());
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
@@ -127,7 +130,7 @@ app.listen(port, ()=> console.log(`listening on port ${port}`));
 passport.serializeUser((user, done) => done(null, user.id))
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await db.models.user.findById(id)
+    const user = await db.models.user.findByPk(id)
     done(null, user)
   } catch (err) {
     done(err)
@@ -155,23 +158,23 @@ app.use(passport.session());
 app.use(express.urlencoded({extended: true}))
 
 ////post route, first finds user with email => if not valid email, err, => if email exits but password doesnt match, err => both match, session logs in
-router.post('/login', (req, res, next) => {
+app.post('/api/login', (req, res, next) => {
   User.findOne({where:{email: req.body.email}})
     .then(user => {
       if (!user){
         res.status(401).send('Wrong email and/or password');
-      } else if (!user.correctPassword(req.body.password)){
+      } else if (!user.correctPassword(req.body.password, user)){
         req.status(401).send('Wrong email and/or password');
       } else {
         req.login(user, err => (err ? next(err) : res.json(user)));
-        res.redirect('/api/products');
+        //res.redirect('/api/products');
       }
     })
     .catch(next)
   });
 
 ////for sign up once we have it, create user with body info, once created, logs in. if not created because email exists in db, error occurs
-router.post('/api/register', (req, res, next)=>{
+app.post('/api/register', (req, res, next)=>{
   User.create(req.body)
     .then(user => {
       req.session.user = user
@@ -187,7 +190,7 @@ router.post('/api/register', (req, res, next)=>{
 })
 
 ////logout button link, deletes session and sends back to home
-router.delete('/api/logout', (req, res, next) => {
+app.delete('/api/logout', (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.redirect('/api/');
@@ -195,4 +198,4 @@ router.delete('/api/logout', (req, res, next) => {
 
 app.get('/api/me', (req, res, next)=>{
   res.json(req.user);
-})
+});
