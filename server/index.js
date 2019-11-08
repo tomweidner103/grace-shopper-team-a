@@ -8,13 +8,7 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const router = require('express').Router();
-<<<<<<< HEAD
 const volleyball = require('volleyball')
-=======
-const volleyball = require('volleyball');
-
-app.use(volleyball);
->>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
 
 app.use(express.json());
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
@@ -158,11 +152,7 @@ app.listen(port, ()=> console.log(`listening on port ${port}`));
 passport.serializeUser((user, done) => done(null, user.id))
 passport.deserializeUser(async (id, done) => {
   try {
-<<<<<<< HEAD
     const user = await User.findByPk(id)
-=======
-    const user = await db.models.user.findByPk(id)
->>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
     done(null, user)
   } catch (err) {
     done(err)
@@ -191,10 +181,7 @@ app.use(express.urlencoded({extended: true}))
 
 ////post route, first finds user with email => if not valid email, err, => if email exits but password doesnt match, err => both match, session logs in
 app.post('/api/login', (req, res, next) => {
-<<<<<<< HEAD
   console.log(req.body)
-=======
->>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
   User.findOne({where:{email: req.body.email}})
     .then(user => {
       console.log(req.body)
@@ -205,11 +192,7 @@ app.post('/api/login', (req, res, next) => {
       } else {
         
         req.login(user, err => (err ? next(err) : res.json(user)));
-<<<<<<< HEAD
         // res.redirect('/api/products');
-=======
-        //res.redirect('/api/products');
->>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
       }
     }).then(() => console.log(req.user))
     .catch(next)
