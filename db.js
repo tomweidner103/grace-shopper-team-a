@@ -200,18 +200,18 @@ const sync = async () => {
   ]
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
 
-  // let products = [
-  //   {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
-  //   {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
-  //   {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
-  // ]
-  // const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+  let products = [
+    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
+    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
+    {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
+  ]
+  const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
 
-  // let items =[
-  //   {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
-  //   {quantity : 3, productId : BC.id, userId : Alexandra.id}
-  // ]
-  // await Promise.all(items.map( item => Lineitem.create(item)));
+  let items =[
+    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+    {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  ]
+  await Promise.all(items.map( item => Lineitem.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
