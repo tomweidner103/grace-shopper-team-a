@@ -1,5 +1,9 @@
 module.exports = {
   // devtool: 'sourcemap',
+  entry: [
+    // enables async-await
+    './src/index.js'
+  ],
   module: {
     rules: [
       {

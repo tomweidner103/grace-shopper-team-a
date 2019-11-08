@@ -224,3 +224,5 @@ app.delete('/api/logout', (req, res, next) => {
 app.get('/api/me', (req, res, next)=>{
   res.json(req.user);
 });
+
+module.exports = app
