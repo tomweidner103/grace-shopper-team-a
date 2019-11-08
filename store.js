@@ -9,6 +9,7 @@ import axios from 'axios';
 const SET_PRODUCTS = 'SET_PRODUCTS';
 const SET_USERS = 'SET_USERS';
 const CREATE_USER = 'CREATE_USER';
+const UPDATE_USER = 'UPDATE_USER';
 const DESTROY_PRODUCT = 'DESTROY_PRODUCT';
 const SET_LOGIN_ERROR = "SET_LOGIN_ERROR"
 const SET_LOGIN_SUCCESS = "SET_LOGIN_SUCCESS"
@@ -24,6 +25,7 @@ const UPDATE_CART = 'UPDATE_CART';
 const setProducts = (products)=> ({ type: SET_PRODUCTS, products });
 const setUsers = (users)=> ({ type: SET_USERS, users });
 const _createUser = (user)=> ({ type: CREATE_USER, user });
+const updateUser = (user) => ({ type: UPDATE_USER, user })
 const _destroyProduct = (product)=> ({ type: DESTROY_PRODUCT, product});
 const setLoginError = (err) => ({ type: SET_LOGIN_ERROR, err });
 const setLoginSuccess = (user) => ({ type: SET_LOGIN_SUCCESS, user });
@@ -55,6 +57,11 @@ const createUser = (user)=> {
     dispatch(_createUser(created))
   }
 }
+
+const updateUserThunks = (id, payload) => async dispatch => {
+  const user = (await axios.put(`/api/users`, {id: id, ...payload})).data;
+  dispatch(updateUser(user));
+}; 
 
 const destroyProduct = (product)=> {
  return async(dispatch)=> {
@@ -102,7 +109,7 @@ const updateThunks = (id, method) => async dispatch => {
   dispatch(update(cart));
 };
 
-export { getProducts, getUsers, createUser, destroyProduct, onLogin, setCartThunks, createCartThunks, destroyCartThunks, updateThunks, createLineItem }
+export { getProducts, getUsers, createUser, updateUserThunks, destroyProduct, onLogin, setCartThunks, createCartThunks, destroyCartThunks, updateThunks, createLineItem }
 
 //Reducers
 
@@ -122,8 +129,11 @@ const store = createStore(
         return action.users
       }
       if (action.type === CREATE_USER) {
-      return [...state, action.user];
-    }
+        return [...state, action.user];
+      }
+      if (action.type === UPDATE_USER) {
+        return state.map(user => user.id === action.user.id ? action.user : user) 
+      }
     return state;
   },
   login: (state = [], action)=> {

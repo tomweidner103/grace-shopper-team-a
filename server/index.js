@@ -8,7 +8,13 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const passport = require('passport');
 const router = require('express').Router();
+<<<<<<< HEAD
 const volleyball = require('volleyball')
+=======
+const volleyball = require('volleyball');
+
+app.use(volleyball);
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
 
 app.use(express.json());
 app.use('/dist', express.static(path.join(__dirname, '../dist')));
@@ -26,7 +32,7 @@ app.get('/api/users', async (req, res, next) => {
   catch(ex) {
     next(ex)
   }
-});
+}); 
 
 app.post('/api/users', async (req, res, next) => {
   try {
@@ -37,6 +43,28 @@ app.post('/api/users', async (req, res, next) => {
     next(ex)
   }
 })
+
+app.put('/api/users', async ( req, res, next ) => {
+  try {
+    const instance = await User.findByPk(req.body.id);
+    Object.assign(instance, req.body);
+    instance.save();
+    res.send(instance);
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
+
+app.get('/api/users/:id', async (req, res, next) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+    res.send(user)
+  }
+  catch(ex) {
+    next(ex)
+  }
+});
 
 app.get('/api/products', async (req, res, next) => {
   try {
@@ -130,7 +158,11 @@ app.listen(port, ()=> console.log(`listening on port ${port}`));
 passport.serializeUser((user, done) => done(null, user.id))
 passport.deserializeUser(async (id, done) => {
   try {
+<<<<<<< HEAD
     const user = await User.findByPk(id)
+=======
+    const user = await db.models.user.findByPk(id)
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
     done(null, user)
   } catch (err) {
     done(err)
@@ -159,7 +191,10 @@ app.use(express.urlencoded({extended: true}))
 
 ////post route, first finds user with email => if not valid email, err, => if email exits but password doesnt match, err => both match, session logs in
 app.post('/api/login', (req, res, next) => {
+<<<<<<< HEAD
   console.log(req.body)
+=======
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
   User.findOne({where:{email: req.body.email}})
     .then(user => {
       console.log(req.body)
@@ -170,7 +205,11 @@ app.post('/api/login', (req, res, next) => {
       } else {
         
         req.login(user, err => (err ? next(err) : res.json(user)));
+<<<<<<< HEAD
         // res.redirect('/api/products');
+=======
+        //res.redirect('/api/products');
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
       }
     }).then(() => console.log(req.user))
     .catch(next)
@@ -193,7 +232,7 @@ app.post('/api/register', (req, res, next)=>{
 })
 
 ////logout button link, deletes session and sends back to home
-router.delete('/api/logout', (req, res, next) => {
+app.delete('/api/logout', (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.redirect('/api/');
@@ -201,4 +240,4 @@ router.delete('/api/logout', (req, res, next) => {
 
 app.get('/api/me', (req, res, next)=>{
   res.json(req.user);
-})
+});

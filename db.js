@@ -27,6 +27,9 @@ const User = conn.define('user', {
   password: {
     type: STRING,
     allowNull: false
+  },
+  salt: {
+    type: Sequelize.STRING
   }
 });
 
@@ -173,7 +176,6 @@ const OrderDetail = conn.define('orderDetail', {
   }
 });
 
-
 User.hasMany(Order);
 Order.hasMany(Product);
 Payment.belongsTo(Order);
@@ -187,8 +189,9 @@ Cart.hasMany(Lineitem);
 Lineitem.belongsTo(Cart);
 Product.hasMany(Lineitem);
 Lineitem.belongsTo(Product);
-
+ 
 const sync = async () => {
+<<<<<<< HEAD
   await conn.sync();
   let users = [
     {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
@@ -197,19 +200,29 @@ const sync = async () => {
     {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
   ]
   const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
+=======
+  await conn.sync({ force: false });
+  // let users = [
+  //   {name: 'Shruti', email: 'shruti@email.com', password: 'SHRUTI'},
+  //   {name: 'Akshay', email: 'akshay@email.com', password: 'AKSHAY'},
+  //   {name: 'Oscar', email: 'oscar@email.com', password: 'OSCAR'},
+  //   {name: 'Alexandra', email: 'alexandra@email.com', password: 'ALEXANDRA'},
+  // ]
+  // const [ Shruti, Akshay, Oscar, Alexandra ] = await Promise.all(users.map( user => User.create(user)));
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
 
-  let products = [
-    {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
-    {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
-    {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
-  ]
-  const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
+  // let products = [
+  //   {name: 'Scorpion', description: 'Long album', price: 10, quantity: 1, genre: 'Rap'},
+  //   {name: 'GKMC', description: 'Beautiful', price: 12, quantity: 1, genre: 'Rap'},
+  //   {name: 'BC', description: 'Best', price: 7, quantity: 1, genre: 'R&B'}
+  // ]
+  // const [ Scorpion, GKMC, BC ] = await Promise.all(products.map( product => Product.create(product)));
 
-  let items =[
-    {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
-    {quantity : 3, productId : BC.id, userId : Alexandra.id}
-  ]
-  await Promise.all(items.map( item => Lineitem.create(item)));
+  // let items =[
+  //   {quantity : 1, productId : Scorpion.id, userId : Akshay.id},
+  //   {quantity : 3, productId : BC.id, userId : Alexandra.id}
+  // ]
+  // await Promise.all(items.map( item => Lineitem.create(item)));
 
   // let payments = [
   //   {name: 'Visa'},
@@ -230,21 +243,37 @@ const getRandomString = function (length) {
 
 ///part of SHA-2 cryto function to hash pw
 const sha256 = function(password, salt){
+<<<<<<< HEAD
   console.log('passowd', password)
   console.log('salt', salt)
   let hash = crypto.createHash('RSA-SHA256').update(password).update(salt).digest('hex')
   return hash;
+=======
+  let hash = crypto.createHmac('sha256', salt);
+  hash.update(password);
+  let value = hash.digest('hex');
+  return value;
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
 };
 //uses two above methods to finally set salt/hash on pw, on login and for any change
 function saltHashPassword (user) {
   if(user.changed('password')){
+<<<<<<< HEAD
   user.password = sha256(user.password, '123445678910');
+=======
+  user.salt = getRandomString(12);
+  user.password = sha256(user.password, user.salt);
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
   }
 };
 
 ///function to check for correct pw in routes
 User.prototype.correctPassword = function(pwd) {
+<<<<<<< HEAD
   return sha256(pwd, '123445678910')
+=======
+  return sha256(pwd, this.salt)
+>>>>>>> bc7c5858481ebd10402adabf3b76a0a2126b67b1
 }
 
 //hooks using above methods to salt/hash pw for encryption
@@ -264,6 +293,6 @@ module.exports = {
     Order,
     OrderDetail,
     Lineitem,
-    Cart
+    Cart,
   }
 }
