@@ -38,14 +38,14 @@
     "webpack-cli": "^3.3.9"
   },
   "scripts": {
-    "webpack": "webpack",
-    "webpack:dev": "webpack --watch --mode=development",
+    "webpack": "webpack --mode=production",
+    "webpack:dev": "webpack --w --mode=development",
     "start:dev": " nodemon server/index.js --ignore dist/ --ignore src/ & npm run webpack:dev",
-    "start": "npm run webpack & node server/index.js"
+    "start": "webpack & node server/index.js"
   },
   "babel": {
     "presets": [
-      "@babel/react"
+      "@babel/preset-react"
     ]
   }
 }

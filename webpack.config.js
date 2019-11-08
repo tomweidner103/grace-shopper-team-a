@@ -1,12 +1,11 @@
 module.exports = {
   // devtool: 'sourcemap',
-
   module: {
     rules: [
       {
-        test: /\.jsx$/,
-        exclude: /node_modules/,
+        test: /\.js$/,
         loader: 'babel-loader',
+        exclude: /node_modules/
       }
     ]
   }
