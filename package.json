@@ -39,7 +39,7 @@
   },
   "scripts": {
     "postinstall": "npm run webpack",
-    "webpack": "webpack --mode=production",
+    "webpack": "webpack",
     "webpack:dev": "webpack --watch --mode=development",
     "start:dev": " nodemon server/index.js --ignore dist/ --ignore src/ & npm run webpack:dev",
     "start": "node server/index.js"
